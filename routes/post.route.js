@@ -1,5 +1,6 @@
 const express = require("express");
 const { PostModel } = require("../models/post.model");
+const { UserModel } = require("../models/user.model");
 
 const postRouter = express.Router();
 
@@ -24,6 +25,10 @@ postRouter.post("/", async (req, res) => {
       image,
     });
     await post.save();
+
+    const userPOST = await UserModel.findById(user);
+    userPOST.posts.push(post);
+    await userPOST.save();
     res.send({ message: "Post added successfully", post });
   } catch (error) {
     console.log("Error occuerred while posting!");
